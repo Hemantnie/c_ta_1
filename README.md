@@ -118,3 +118,6 @@ To run the tests, use the following command:
 * User transaction and locks to update the data
 * The error handling could have been better by adding a new Error classes.
 * Create a  utils methods for timezone and validations
+* Fix skipped test
+* Fix timezone issue with Holiday.
+* Add documentation
