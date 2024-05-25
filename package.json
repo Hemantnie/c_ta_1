@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "npx tsc && node dist/app.js"
+    "start": "npx tsc && node dist/app.js",
+    "seed:holidays": "ts-node src/scripts/seedHolidays.ts",
+    "seed:employees": "ts-node src/scripts/seedEmployees.ts"
   },
   "keywords": [],
   "author": "",

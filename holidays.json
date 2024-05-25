@@ -1,0 +1,38 @@
+[
+    {
+      "country": "US",
+      "year": 2024,
+      "date": "2024-01-01T00:00:00Z",
+      "localName": "New Year's Day",
+      "name": "New Year's Day"
+    },
+    {
+      "country": "US",
+      "year": 2024,
+      "date": "2024-07-04T00:00:00Z",
+      "localName": "Independence Day",
+      "name": "Independence Day"
+    },
+    {
+      "country": "US",
+      "year": 2024,
+      "date": "2024-12-25T00:00:00Z",
+      "localName": "Christmas Day",
+      "name": "Christmas Day"
+    },
+    {
+      "country": "CA",
+      "year": 2024,
+      "date": "2024-07-01T00:00:00Z",
+      "localName": "Canada Day",
+      "name": "Canada Day"
+    },
+    {
+      "country": "CA",
+      "year": 2024,
+      "date": "2024-12-25T00:00:00Z",
+      "localName": "Christmas Day",
+      "name": "Christmas Day"
+    }
+  ]
+  
