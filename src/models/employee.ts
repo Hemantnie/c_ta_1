@@ -25,6 +25,10 @@ class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> imp
   public modified_at!: Date;
   public address?: Address;
 
+  public getSalaryInDollers():string{
+    return `${this.salary}$`;
+  }
+
   public static initialize(sequelize: Sequelize) {
     Employee.init(
       {
