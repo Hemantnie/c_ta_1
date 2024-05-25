@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import Employee from '../models/employee';
+import EmployeeService from '../services/employeeService';
+import { EmployeeCreationAttributes } from '../models/employee';
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
-    const employee = await Employee.create({ ...req.body });
+    const employeeData: EmployeeCreationAttributes = req.body;
+    const employee = await EmployeeService.createEmployee(employeeData);
     res.status(201).json(employee);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -12,7 +14,7 @@ export const createEmployee = async (req: Request, res: Response) => {
 
 export const getEmployees = async (req: Request, res: Response) => {
   try {
-    const employees = await Employee.findAll();
+    const employees = await EmployeeService.getAllEmployees();
     res.status(200).json(employees);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -21,7 +23,7 @@ export const getEmployees = async (req: Request, res: Response) => {
 
 export const getEmployeeById = async (req: Request, res: Response) => {
   try {
-    const employee = await Employee.findByPk(req.params.id);
+    const employee = await EmployeeService.getEmployeeById(req.params.id);
     if (employee) {
       res.status(200).json(employee);
     } else {
@@ -34,11 +36,9 @@ export const getEmployeeById = async (req: Request, res: Response) => {
 
 export const updateEmployee = async (req: Request, res: Response) => {
   try {
-    const [updated] = await Employee.update(req.body, {
-      where: { employee_id: req.params.id },
-    });
+    const updated = await EmployeeService.updateEmployee(req.params.id, req.body);
     if (updated) {
-      const updatedEmployee = await Employee.findByPk(req.params.id);
+      const updatedEmployee = await EmployeeService.getEmployeeById(req.params.id);
       res.status(200).json(updatedEmployee);
     } else {
       res.status(404).json({ error: 'Employee not found' });
@@ -50,9 +50,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
 
 export const deleteEmployee = async (req: Request, res: Response) => {
   try {
-    const deleted = await Employee.destroy({
-      where: { employee_id: req.params.id },
-    });
+    const deleted = await EmployeeService.deleteEmployee(req.params.id);
     if (deleted) {
       res.status(204).send();
     } else {

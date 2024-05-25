@@ -63,4 +63,5 @@ Employee.init(
   }
 );
 
+export { EmployeeCreationAttributes };
 export default Employee;
