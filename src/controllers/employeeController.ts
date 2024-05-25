@@ -2,13 +2,22 @@ import { Request, Response } from 'express';
 import EmployeeService from '../services/employeeService';
 import { EmployeeCreationAttributes } from '../models/employee';
 
+// Type guard to check if an error is an instance of Error
+function isError(error: unknown): error is Error {
+  return error instanceof Error;
+}
+
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const employeeData: EmployeeCreationAttributes = req.body;
     const employee = await EmployeeService.createEmployee(employeeData);
     res.status(201).json(employee);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
+  } catch (error) {
+    if (isError(error) && error.message === 'Invalid email format') {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
+    }
   }
 };
 
@@ -16,8 +25,8 @@ export const getEmployees = async (req: Request, res: Response) => {
   try {
     const employees = await EmployeeService.getAllEmployees();
     res.status(200).json(employees);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
+  } catch (error) {
+    res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
   }
 };
 
@@ -29,8 +38,8 @@ export const getEmployeeById = async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ error: 'Employee not found' });
     }
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
+  } catch (error) {
+    res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
   }
 };
 
@@ -43,8 +52,12 @@ export const updateEmployee = async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ error: 'Employee not found' });
     }
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
+  } catch (error) {
+    if (isError(error) && error.message === 'Invalid email format') {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
+    }
   }
 };
 
@@ -56,7 +69,7 @@ export const deleteEmployee = async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ error: 'Employee not found' });
     }
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
+  } catch (error) {
+    res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
   }
 };

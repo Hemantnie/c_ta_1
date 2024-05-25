@@ -25,6 +25,17 @@ describe('Employee API', () => {
     employeeId = res.body.employee_id;
   });
 
+  it('should fail to create a new employee with invalid email', async () => {
+    const res = await request(app)
+      .post('/api/employees')
+      .send({
+        ...employeeData,
+        email: 'invalid-email',
+      });
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('error', 'Invalid email format');
+  });
+
   it('should retrieve all employees', async () => {
     const res = await request(app).get('/api/employees');
     expect(res.status).toBe(200);
@@ -48,6 +59,16 @@ describe('Employee API', () => {
       });
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('name', 'Jane Doe');
+  });
+
+  it('should fail to update an employee with invalid email', async () => {
+    const res = await request(app)
+      .put(`/api/employees/${employeeId}`)
+      .send({
+        email: 'invalid-email',
+      });
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('error', 'Invalid email format');
   });
 
   it('should delete an employee', async () => {

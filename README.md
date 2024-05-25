@@ -9,3 +9,4 @@ npm test
 - We can use third party services to get the timezone of requetse uedser basbed on IP
 
 - User transaction and locks to update the data
+- The error handling could have been better by adding a new Error classes.
