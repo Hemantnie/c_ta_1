@@ -2,11 +2,7 @@ import { Request, Response } from 'express';
 import EmployeeService from '../services/employeeService';
 import { EmployeeCreationAttributes } from '../models/employee';
 import { AddressCreationAttributes } from '../models/address';
-
-// Type guard to check if an error is an instance of Error
-function isError(error: unknown): error is Error {
-  return error instanceof Error;
-}
+import { isError } from '../utils/utils';
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
@@ -38,6 +34,7 @@ export const getEmployeeById = async (req: Request, res: Response) => {
   try {
     const employee = await EmployeeService.getEmployeeById(req.params.id);
     if (employee) {
+      console.log(employee.getSalaryInDollers());
       res.status(200).json(employee);
     } else {
       res.status(404).json({ error: 'Employee not found' });
