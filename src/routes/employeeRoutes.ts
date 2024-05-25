@@ -6,6 +6,7 @@ import {
   updateEmployee,
   deleteEmployee,
   getPublicHolidays,
+  getEmployeesWithUpcomingHolidays,
 } from '../controllers/employeeController';
 import { convertToTimezone } from '../middleware/timezoneMiddleware';
 
@@ -16,6 +17,7 @@ router.get('/employees', convertToTimezone, getEmployees);
 router.get('/employees/:id', convertToTimezone, getEmployeeById);
 router.put('/employees/:id', updateEmployee);
 router.delete('/employees/:id', deleteEmployee);
-router.get('/employees/:id/holidays/:year', getPublicHolidays); // New route for public holidays
+router.get('/employees/:id/holidays/:year', getPublicHolidays);
+router.get('/employees/upcoming-holidays', getEmployeesWithUpcomingHolidays);
 
 export default router;

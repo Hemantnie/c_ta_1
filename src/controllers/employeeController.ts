@@ -85,3 +85,12 @@ export const getPublicHolidays = async (req: Request, res: Response) => {
     res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
   }
 };
+
+export const getEmployeesWithUpcomingHolidays = async (req: Request, res: Response) => {
+  try {
+    const employees = await EmployeeService.getEmployeesWithUpcomingHolidays();
+    res.status(200).json(employees);
+  } catch (error) {
+    res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
+  }
+};

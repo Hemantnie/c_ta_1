@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Op } from 'sequelize';
 
 import EmployeeRepository from '../repositories/employeeRepository';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
@@ -62,6 +63,35 @@ class EmployeeService {
     }));
     await HolidayRepository.bulkCreate(holidayEntries);
     return Holiday.findAll({ where: { country, year } });
+  }
+
+  public async getEmployeesWithUpcomingHolidays(): Promise<Employee[]> {
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+
+    const holidays = await Holiday.findAll({
+      where: {
+        date: {
+          [Op.between]: [today, nextWeek],
+        },
+      },
+    });
+
+    const countryList = holidays.map(holiday => holiday.country);
+    return Employee.findAll({
+      include: [
+        {
+          model: Address,
+          as: 'address',
+          where: {
+            country: {
+              [Op.in]: countryList,
+            },
+          },
+        },
+      ],
+    });
   }
 }
 
