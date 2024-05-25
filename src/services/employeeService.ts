@@ -1,12 +1,12 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
-
+import { v4 as uuidv4 } from 'uuid';
 import EmployeeRepository from '../repositories/employeeRepository';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
 import Address, { AddressCreationAttributes } from '../models/address';
 import { getPublicHolidays } from '../utils/publicHolidays';
 import HolidayRepository from '../repositories/holidayRepository';
 import Holiday from '../models/holiday';
+import sequelize from '../models';
 
 class EmployeeService {
   private validateEmail(email: string): boolean {
@@ -33,11 +33,51 @@ class EmployeeService {
     if (data.email && !this.validateEmail(data.email)) {
       throw new Error('Invalid email format');
     }
-    return EmployeeRepository.update(id, data, addressData);
+    const transaction = await sequelize.transaction();
+    try {
+      const employee = await Employee.findByPk(id, {
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+
+      if (!employee) {
+        await transaction.rollback();
+        return 0;
+      }
+
+      await Employee.update(data, { where: { employee_id: id }, transaction });
+      await Address.update(addressData, { where: { employee_id: id }, transaction });
+
+      await transaction.commit();
+      return 1;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 
   public async deleteEmployee(id: string): Promise<number> {
-    return EmployeeRepository.delete(id);
+    const transaction = await sequelize.transaction();
+    try {
+      const employee = await Employee.findByPk(id, {
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+
+      if (!employee) {
+        await transaction.rollback();
+        return 0;
+      }
+
+      await Address.destroy({ where: { employee_id: id }, transaction });
+      await Employee.destroy({ where: { employee_id: id }, transaction });
+
+      await transaction.commit();
+      return 1;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 
   public async getPublicHolidaysForEmployee(id: string, year: number): Promise<Holiday[]> {
@@ -52,6 +92,7 @@ class EmployeeService {
       return cachedHolidays;
     }
 
+    //TODO: Fix this error
     const holidays = await getPublicHolidays(country, year);
     const holidayEntries = holidays.map(holiday => ({
       holiday_id: uuidv4(),
@@ -66,32 +107,48 @@ class EmployeeService {
   }
 
   public async getEmployeesWithUpcomingHolidays(): Promise<Employee[]> {
-    const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
+    const transaction = await sequelize.transaction();
+    try {
+      const today = new Date();
+      const nextWeek = new Date();
+      nextWeek.setDate(today.getDate() + 7);
 
-    const holidays = await Holiday.findAll({
-      where: {
-        date: {
-          [Op.between]: [today, nextWeek],
-        },
-      },
-    });
-
-    const countryList = holidays.map(holiday => holiday.country);
-    return Employee.findAll({
-      include: [
-        {
-          model: Address,
-          as: 'address',
-          where: {
-            country: {
-              [Op.in]: countryList,
-            },
+      const holidays = await Holiday.findAll({
+        where: {
+          date: {
+            [Op.between]: [today, nextWeek],
           },
         },
-      ],
-    });
+        transaction,
+      });
+
+      if (!holidays.length) {
+        await transaction.commit();
+        return [];
+      }
+
+      const countryList = holidays.map(holiday => holiday.country);
+      const employees = await Employee.findAll({
+        include: [
+          {
+            model: Address,
+            as: 'address',
+            where: {
+              country: {
+                [Op.in]: countryList,
+              },
+            },
+          },
+        ],
+        transaction,
+      });
+
+      await transaction.commit();
+      return employees;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 }
 
