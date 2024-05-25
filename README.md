@@ -18,7 +18,7 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 
    ```bash
    git clone https://github.com/Hemantnie/c_ta_1.git
-   cd employee-management
+   cd c_ta_1
    ```
 
 2. Install dependencies:
