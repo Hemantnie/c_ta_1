@@ -45,9 +45,9 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 * Body:
     ```json
     {
-      "name": "John Doe",
+      "name": "Ravi Teju",
       "position": "Developer",
-      "email": "john.doe@example.com",
+      "email": "Ravi.Teju@example.com",
       "salary": 60000
     }
     ```
@@ -75,9 +75,9 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 * Body:
     ```json
     {
-      "name": "John Doe",
+      "name": "Ravi Teju",
       "position": "Developer",
-      "email": "john.doe@example.com",
+      "email": "Ravi.Teju@example.com",
       "salary": 60000
     }
     ```
@@ -117,3 +117,4 @@ To run the tests, use the following command:
 * We can use third party services to get the timezone of requetse uedser basbed on IP* 
 * User transaction and locks to update the data
 * The error handling could have been better by adding a new Error classes.
+* Create a  utils methods for timezone and validations
