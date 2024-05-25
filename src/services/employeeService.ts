@@ -1,6 +1,7 @@
 import EmployeeRepository from '../repositories/employeeRepository';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
 import Address, { AddressCreationAttributes } from '../models/address';
+import { getPublicHolidays } from '../utils/publicHolidays';
 
 class EmployeeService {
   private validateEmail(email: string): boolean {
@@ -32,6 +33,15 @@ class EmployeeService {
 
   public async deleteEmployee(id: string): Promise<number> {
     return EmployeeRepository.delete(id);
+  }
+
+  public async getPublicHolidaysForEmployee(id: string, year: number): Promise<any[]> {
+    const employee = await EmployeeRepository.findById(id);
+    if (!employee || !employee.address) {
+      throw new Error('Employee or address not found');
+    }
+    const countryCode = employee.address.country;
+    return getPublicHolidays(countryCode, year);
   }
 }
 

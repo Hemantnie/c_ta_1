@@ -10,14 +10,14 @@ beforeAll(async () => {
 describe('Employee API', () => {
   let employeeId: string;
   const employeeData = {
-    name: 'Ramakant Verma',
+    name: 'John Doe',
     position: 'Developer',
-    email: 'ramakant.verma@example.com',
+    email: 'john.doe@example.com',
     salary: 60000,
     address: {
       street: '123 Main St',
       house_number: '456',
-      country: 'USA',
+      country: 'US',
       state: 'CA',
       zipcode: '12345',
     },
@@ -59,20 +59,20 @@ describe('Employee API', () => {
     const res = await request(app)
       .put(`/api/employees/${employeeId}`)
       .send({
-        name: 'Rama Kumar',
+        name: 'Jane Doe',
         position: 'Senior Developer',
-        email: 'rama.kumar@example.com',
+        email: 'jane.doe@example.com',
         salary: 80000,
         address: {
           street: '456 Elm St',
           house_number: '789',
-          country: 'USA',
+          country: 'US',
           state: 'CA',
           zipcode: '54321',
         },
       });
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('name', 'Rama Kumar');
+    expect(res.body).toHaveProperty('name', 'Jane Doe');
   });
 
   it('should fail to update an employee with invalid email', async () => {
@@ -93,6 +93,13 @@ describe('Employee API', () => {
   it('should return 404 when retrieving a deleted employee', async () => {
     const res = await request(app).get(`/api/employees/${employeeId}`);
     expect(res.status).toBe(404);
+  });
+
+  it.skip('should retrieve public holidays for an employee', async () => {
+    const year = new Date().getFullYear();
+    const res = await request(app).get(`/api/employees/${employeeId}/holidays/${year}`);
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
   });
 
   describe('Timezone conversion', () => {

@@ -31,6 +31,7 @@ class EmployeeRepository {
       const employee = await Employee.findByPk(id, {
         transaction,
         lock: transaction.LOCK.UPDATE,
+        include: [{ model: Address, as: 'address' }],
       });
       if (!employee) {
         await transaction.commit();
@@ -52,6 +53,7 @@ class EmployeeRepository {
       const employee = await Employee.findByPk(id, {
         transaction,
         lock: transaction.LOCK.UPDATE,
+        include: [{ model: Address, as: 'address' }],
       });
       if (!employee) {
         await transaction.commit();
