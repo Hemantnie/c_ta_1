@@ -25,9 +25,9 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
     ```bash
        npm install
     ```
-3. Initialize the SQLite database:
+3. Seed the database:
     ```bash
-        npx sequelize-cli db:migrate
+        npm run seed:all
     ```
 
 ## Usage
