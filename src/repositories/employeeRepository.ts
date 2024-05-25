@@ -1,8 +1,18 @@
+import { Transaction } from 'sequelize';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
+import sequelize from '../models';
 
 class EmployeeRepository {
   public async create(data: EmployeeCreationAttributes): Promise<Employee> {
-    return Employee.create(data);
+    const transaction = await sequelize.transaction();
+    try {
+      const employee = await Employee.create(data, { transaction });
+      await transaction.commit();
+      return employee;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 
   public async findAll(): Promise<Employee[]> {
@@ -14,8 +24,15 @@ class EmployeeRepository {
   }
 
   public async update(id: string, data: Partial<Employee>): Promise<number> {
-    const [affectedCount] = await Employee.update(data, { where: { employee_id: id } });
-    return affectedCount;
+    const transaction = await sequelize.transaction();
+    try {
+      const [affectedCount] = await Employee.update(data, { where: { employee_id: id }, transaction });
+      await transaction.commit();
+      return affectedCount;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 
   public async delete(id: string): Promise<number> {
