@@ -1,6 +1,5 @@
 How to Execute the project -> 
-npx tsc
-node dist/app.js
+npm start
 
 How to run tests ?
 npm test
