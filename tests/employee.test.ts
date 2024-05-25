@@ -115,7 +115,7 @@ describe('Employee API', () => {
   it('should retrieve all employees', async () => {
     const res = await request(app).get('/api/employees');
     expect(res.status).toBe(200);
-    expect(res.body.length).toBeGreaterThan(0);
+    expect(res.body.length).toEqual(3);
   });
 
   it('should retrieve an employee by ID', async () => {
@@ -128,9 +128,7 @@ describe('Employee API', () => {
     const res = await request(app)
       .put(`/api/employees/${employeeId}`)
       .send({
-        name: 'Jane Doe',
-        position: 'Senior Developer',
-        email: 'jane.doe@example.com',
+        email: 'Rama.Kumar@google.com',
         salary: 80000,
         address: {
           street: '456 Elm St',
@@ -141,7 +139,7 @@ describe('Employee API', () => {
         },
       });
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('name', 'Jane Doe');
+    expect(res.body).toHaveProperty('email', 'Rama.Kumar@google.com');
   });
 
   it('should fail to update an employee with invalid email', async () => {
@@ -154,6 +152,13 @@ describe('Employee API', () => {
     expect(res.body).toHaveProperty('error', 'Invalid email format');
   });
 
+  it('should retrieve public holidays for an employee', async () => {
+    const year = new Date().getFullYear();
+    const res = await request(app).get(`/api/employees/${employeeId}/holidays/${year}`);
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
+
   it('should delete an employee', async () => {
     const res = await request(app).delete(`/api/employees/${employeeId}`);
     expect(res.status).toBe(204);
@@ -164,20 +169,14 @@ describe('Employee API', () => {
     expect(res.status).toBe(404);
   });
 
-  it.skip('should retrieve public holidays for an employee', async () => {
-    const year = new Date().getFullYear();
-    const res = await request(app).get(`/api/employees/${employeeId}/holidays/${year}`);
-    expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
-  });
-
-  it.skip('should retrieve employees with upcoming public holidays', async () => {
+  it('should retrieve employees with upcoming public holidays', async () => {
     const res = await request(app).get('/api/employees/upcoming-holidays');
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toBe(1);
     expect(res.body[0].name).toBe('John Doe');
   });
+
 
   describe('Timezone conversion', () => {
     beforeAll(async () => {

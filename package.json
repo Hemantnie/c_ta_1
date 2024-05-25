@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "start": "npx tsc && node dist/app.js",
-    "seed:all": "ts-node src/scripts/seedData.ts"
+    "seed:all": "ts-node src/scripts/seedData.ts",
+    "clear:cache": "npm cache clean --force"
   },
   "keywords": [],
   "author": "",
