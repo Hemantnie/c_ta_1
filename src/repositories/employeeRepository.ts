@@ -1,4 +1,4 @@
-import { Transaction } from 'sequelize';
+import { Transaction, LOCK } from 'sequelize';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
 import sequelize from '../models';
 
@@ -26,6 +26,14 @@ class EmployeeRepository {
   public async update(id: string, data: Partial<Employee>): Promise<number> {
     const transaction = await sequelize.transaction();
     try {
+      const employee = await Employee.findByPk(id, {
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+      if (!employee) {
+        await transaction.commit();
+        return 0;
+      }
       const [affectedCount] = await Employee.update(data, { where: { employee_id: id }, transaction });
       await transaction.commit();
       return affectedCount;
@@ -36,7 +44,23 @@ class EmployeeRepository {
   }
 
   public async delete(id: string): Promise<number> {
-    return Employee.destroy({ where: { employee_id: id } });
+    const transaction = await sequelize.transaction();
+    try {
+      const employee = await Employee.findByPk(id, {
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+      if (!employee) {
+        await transaction.commit();
+        return 0;
+      }
+      const affectedCount = await Employee.destroy({ where: { employee_id: id }, transaction });
+      await transaction.commit();
+      return affectedCount;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 }
 
