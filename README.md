@@ -3,3 +3,4 @@ npx tsc
 node dist/app.js
 
 How to run tests ?
+npm test
