@@ -63,5 +63,14 @@ Employee.init(
   }
 );
 
+Employee.beforeCreate((employee, options) => {
+  employee.created_at = new Date(new Date().toUTCString());
+  employee.modified_at = new Date(new Date().toUTCString());
+});
+
+Employee.beforeUpdate((employee, options) => {
+  employee.modified_at = new Date(new Date().toUTCString());
+});
+
 export { EmployeeCreationAttributes };
 export default Employee;
