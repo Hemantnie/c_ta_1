@@ -1,7 +1,11 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import EmployeeRepository from '../repositories/employeeRepository';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
 import Address, { AddressCreationAttributes } from '../models/address';
 import { getPublicHolidays } from '../utils/publicHolidays';
+import HolidayRepository from '../repositories/holidayRepository';
+import Holiday from '../models/holiday';
 
 class EmployeeService {
   private validateEmail(email: string): boolean {
@@ -35,13 +39,29 @@ class EmployeeService {
     return EmployeeRepository.delete(id);
   }
 
-  public async getPublicHolidaysForEmployee(id: string, year: number): Promise<any[]> {
+  public async getPublicHolidaysForEmployee(id: string, year: number): Promise<Holiday[]> {
     const employee = await EmployeeRepository.findById(id);
     if (!employee || !employee.address) {
       throw new Error('Employee or address not found');
     }
-    const countryCode = employee.address.country;
-    return getPublicHolidays(countryCode, year);
+    const country = employee.address.country;
+    const cachedHolidays = await HolidayRepository.findByCountryAndYear(country, year);
+
+    if (cachedHolidays.length > 0) {
+      return cachedHolidays;
+    }
+
+    const holidays = await getPublicHolidays(country, year);
+    const holidayEntries = holidays.map(holiday => ({
+      holiday_id: uuidv4(),
+      country,
+      year,
+      date: new Date(holiday.date),
+      localName: holiday.localName,
+      name: holiday.name,
+    }));
+    await HolidayRepository.bulkCreate(holidayEntries);
+    return Holiday.findAll({ where: { country, year } });
   }
 }
 

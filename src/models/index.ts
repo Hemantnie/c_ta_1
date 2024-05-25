@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import Employee from './employee';
 import Address from './address';
+import Holiday from './holiday';
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
@@ -10,6 +11,7 @@ const sequelize = new Sequelize({
 // Initialize models
 Employee.initialize(sequelize);
 Address.initialize(sequelize);
+Holiday.initialize(sequelize);
 
 // Setup associations
 Employee.associate();

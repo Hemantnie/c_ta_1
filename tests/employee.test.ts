@@ -10,9 +10,9 @@ beforeAll(async () => {
 describe('Employee API', () => {
   let employeeId: string;
   const employeeData = {
-    name: 'John Doe',
+    name: 'Rama Kumar',
     position: 'Developer',
-    email: 'john.doe@example.com',
+    email: 'Rama.Kumar@example.com',
     salary: 60000,
     address: {
       street: '123 Main St',
