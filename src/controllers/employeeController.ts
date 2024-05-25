@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import EmployeeService from '../services/employeeService';
 import { EmployeeCreationAttributes } from '../models/employee';
+import { AddressCreationAttributes } from '../models/address';
 
 // Type guard to check if an error is an instance of Error
 function isError(error: unknown): error is Error {
@@ -10,7 +11,8 @@ function isError(error: unknown): error is Error {
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const employeeData: EmployeeCreationAttributes = req.body;
-    const employee = await EmployeeService.createEmployee(employeeData);
+    const addressData: AddressCreationAttributes = req.body.address;
+    const employee = await EmployeeService.createEmployee(employeeData, addressData);
     res.status(201).json(employee);
   } catch (error) {
     if (isError(error) && error.message === 'Invalid email format') {
@@ -45,7 +47,7 @@ export const getEmployeeById = async (req: Request, res: Response) => {
 
 export const updateEmployee = async (req: Request, res: Response) => {
   try {
-    const updated = await EmployeeService.updateEmployee(req.params.id, req.body);
+    const updated = await EmployeeService.updateEmployee(req.params.id, req.body, req.body.address);
     if (updated) {
       const updatedEmployee = await EmployeeService.getEmployeeById(req.params.id);
       res.status(200).json(updatedEmployee);

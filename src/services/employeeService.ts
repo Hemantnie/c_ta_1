@@ -1,5 +1,6 @@
 import EmployeeRepository from '../repositories/employeeRepository';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
+import Address, { AddressCreationAttributes } from '../models/address';
 
 class EmployeeService {
   private validateEmail(email: string): boolean {
@@ -7,11 +8,11 @@ class EmployeeService {
     return emailRegex.test(email);
   }
 
-  public async createEmployee(data: EmployeeCreationAttributes): Promise<Employee> {
+  public async createEmployee(data: EmployeeCreationAttributes, addressData: AddressCreationAttributes): Promise<Employee> {
     if (!this.validateEmail(data.email)) {
       throw new Error('Invalid email format');
     }
-    return EmployeeRepository.create(data);
+    return EmployeeRepository.create(data, addressData);
   }
 
   public async getAllEmployees(): Promise<Employee[]> {
@@ -22,11 +23,11 @@ class EmployeeService {
     return EmployeeRepository.findById(id);
   }
 
-  public async updateEmployee(id: string, data: Partial<Employee>): Promise<number> {
+  public async updateEmployee(id: string, data: Partial<Employee>, addressData: Partial<Address>): Promise<number> {
     if (data.email && !this.validateEmail(data.email)) {
       throw new Error('Invalid email format');
     }
-    return EmployeeRepository.update(id, data);
+    return EmployeeRepository.update(id, data, addressData);
   }
 
   public async deleteEmployee(id: string): Promise<number> {

@@ -14,6 +14,13 @@ describe('Employee API', () => {
     position: 'Developer',
     email: 'ramakant.verma@example.com',
     salary: 60000,
+    address: {
+      street: '123 Main St',
+      house_number: '456',
+      country: 'USA',
+      state: 'CA',
+      zipcode: '12345',
+    },
   };
 
   it('should create a new employee', async () => {
@@ -52,13 +59,20 @@ describe('Employee API', () => {
     const res = await request(app)
       .put(`/api/employees/${employeeId}`)
       .send({
-        name: 'Jane Doe',
+        name: 'Rama Kumar',
         position: 'Senior Developer',
-        email: 'jane.doe@example.com',
+        email: 'rama.kumar@example.com',
         salary: 80000,
+        address: {
+          street: '456 Elm St',
+          house_number: '789',
+          country: 'USA',
+          state: 'CA',
+          zipcode: '54321',
+        },
       });
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('name', 'Jane Doe');
+    expect(res.body).toHaveProperty('name', 'Rama Kumar');
   });
 
   it('should fail to update an employee with invalid email', async () => {

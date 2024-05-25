@@ -1,12 +1,14 @@
 import { Transaction, LOCK } from 'sequelize';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
+import Address, { AddressCreationAttributes } from '../models/address';
 import sequelize from '../models';
 
 class EmployeeRepository {
-  public async create(data: EmployeeCreationAttributes): Promise<Employee> {
+  public async create(data: EmployeeCreationAttributes, addressData: AddressCreationAttributes): Promise<Employee> {
     const transaction = await sequelize.transaction();
     try {
       const employee = await Employee.create(data, { transaction });
+      await Address.create({ ...addressData, employee_id: employee.employee_id }, { transaction });
       await transaction.commit();
       return employee;
     } catch (error) {
@@ -16,14 +18,14 @@ class EmployeeRepository {
   }
 
   public async findAll(): Promise<Employee[]> {
-    return Employee.findAll();
+    return Employee.findAll({ include: [{ model: Address, as: 'address' }] });
   }
 
   public async findById(id: string): Promise<Employee | null> {
-    return Employee.findByPk(id);
+    return Employee.findByPk(id, { include: [{ model: Address, as: 'address' }] });
   }
 
-  public async update(id: string, data: Partial<Employee>): Promise<number> {
+  public async update(id: string, data: Partial<Employee>, addressData: Partial<Address>): Promise<number> {
     const transaction = await sequelize.transaction();
     try {
       const employee = await Employee.findByPk(id, {
@@ -34,9 +36,10 @@ class EmployeeRepository {
         await transaction.commit();
         return 0;
       }
-      const [affectedCount] = await Employee.update(data, { where: { employee_id: id }, transaction });
+      await Employee.update(data, { where: { employee_id: id }, transaction });
+      await Address.update(addressData, { where: { employee_id: id }, transaction });
       await transaction.commit();
-      return affectedCount;
+      return 1;
     } catch (error) {
       await transaction.rollback();
       throw error;
@@ -54,6 +57,7 @@ class EmployeeRepository {
         await transaction.commit();
         return 0;
       }
+      await Address.destroy({ where: { employee_id: id }, transaction });
       const affectedCount = await Employee.destroy({ where: { employee_id: id }, transaction });
       await transaction.commit();
       return affectedCount;

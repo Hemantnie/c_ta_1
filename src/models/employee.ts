@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from './index';
 import { v4 as uuidv4 } from 'uuid';
+import Address from './address';
 
 interface EmployeeAttributes {
   employee_id: string;
@@ -70,6 +71,15 @@ Employee.beforeCreate((employee, options) => {
 
 Employee.beforeUpdate((employee, options) => {
   employee.modified_at = new Date(new Date().toUTCString());
+});
+
+Employee.hasOne(Address, {
+  foreignKey: 'employee_id',
+  as: 'address',
+});
+Address.belongsTo(Employee, {
+  foreignKey: 'employee_id',
+  as: 'employee',
 });
 
 export { EmployeeCreationAttributes };
