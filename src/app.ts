@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import employeeRoutes from './routes/employeeRoutes';
 import sequelize from './models';
+import './cron/scheduleJobs';
 
 const app = express();
 const PORT = 3000;
