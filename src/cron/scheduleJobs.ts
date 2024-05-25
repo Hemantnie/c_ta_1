@@ -1,7 +1,10 @@
 import cron from 'node-cron';
 import EmployeeService from '../services/employeeService';
-
-cron.schedule('1 * * * * *', async () => {
+/**
+   * Executes every 2 seconds
+   * @returns .
+   */
+cron.schedule('*/2 * * * * *', async () => {
   console.log('_________Running scheduled job: Fetching employees with upcoming public holidays_________');
   try {
     const employees = await EmployeeService.getEmployeesWithUpcomingHolidays();

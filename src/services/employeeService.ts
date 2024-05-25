@@ -7,15 +7,12 @@ import { getPublicHolidays } from '../utils/publicHolidays';
 import HolidayRepository from '../repositories/holidayRepository';
 import Holiday from '../models/holiday';
 import sequelize from '../models';
+import { validateEmail } from '../utils/EmailValidator';
 
 class EmployeeService {
-  private validateEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
 
   public async createEmployee(data: EmployeeCreationAttributes, addressData: AddressCreationAttributes): Promise<Employee> {
-    if (!this.validateEmail(data.email)) {
+    if (!validateEmail(data.email)) {
       throw new Error('Invalid email format');
     }
     const transaction = await sequelize.transaction();
@@ -41,7 +38,7 @@ class EmployeeService {
   }
 
   public async updateEmployee(id: string, data: Partial<Employee>, addressData: Partial<Address>): Promise<number> {
-    if (data.email && !this.validateEmail(data.email)) {
+    if (data.email && !validateEmail(data.email)) {
       throw new Error('Invalid email format');
     }
     const transaction = await sequelize.transaction();
