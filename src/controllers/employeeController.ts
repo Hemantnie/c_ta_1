@@ -17,6 +17,8 @@ export const createEmployee = async (req: Request, res: Response) => {
   } catch (error) {
     if (isError(error) && error.message === 'Invalid email format') {
       res.status(400).json({ error: error.message });
+    } else if (isError(error) && error.message === 'Email already exists') {
+      res.status(409).json({ error: error.message });
     } else {
       res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
     }

@@ -10,7 +10,7 @@ interface EmployeeAttributes {
   salary: number;
   created_at: Date;
   modified_at: Date;
-  address?: Address; // Add address as an optional property
+  address?: Address;
 }
 
 interface EmployeeCreationAttributes extends Optional<EmployeeAttributes, 'employee_id' | 'created_at' | 'modified_at'> {}
@@ -23,7 +23,7 @@ class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> imp
   public salary!: number;
   public created_at!: Date;
   public modified_at!: Date;
-  public address?: Address; // Add address as an optional property
+  public address?: Address;
 
   public static initialize(sequelize: Sequelize) {
     Employee.init(
@@ -44,6 +44,7 @@ class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> imp
         email: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: true,
         },
         salary: {
           type: DataTypes.FLOAT,

@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Transaction, UniqueConstraintError } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import EmployeeRepository from '../repositories/employeeRepository';
 import Employee, { EmployeeCreationAttributes } from '../models/employee';
@@ -18,7 +18,18 @@ class EmployeeService {
     if (!this.validateEmail(data.email)) {
       throw new Error('Invalid email format');
     }
-    return EmployeeRepository.create(data, addressData);
+    const transaction = await sequelize.transaction();
+    try {
+      const employee = await EmployeeRepository.create(data, addressData, transaction);
+      await transaction.commit();
+      return employee;
+    } catch (error) {
+      await transaction.rollback();
+      if (error instanceof UniqueConstraintError) {
+        throw new Error('Email already exists');
+      }
+      throw error;
+    }
   }
 
   public async getAllEmployees(): Promise<Employee[]> {
@@ -92,7 +103,6 @@ class EmployeeService {
       return cachedHolidays;
     }
 
-    //TODO: Fix this error
     const holidays = await getPublicHolidays(country, year);
     const holidayEntries = holidays.map(holiday => ({
       holiday_id: uuidv4(),
