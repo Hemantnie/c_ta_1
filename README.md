@@ -9,6 +9,8 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
 - [Technologies Used](#technologies-used)
+- [Cron job to send mail for upcoming public holidays](#cron-job-to-send-mail-for-upcoming-public-holidays)
+- [Future Enhancements](#future-enhancements)
 
 ## Installation
 
@@ -91,7 +93,18 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
     * `200 OK` on success
     * `404 Not Found` if the employee does not exist
 
+### Get Public Holidays for a given employee
+* URL: `/api/employees/:id/holidays/:year`
+* Method: `GET`
+* Responses:
+    * `200 OK` on success
 
+### Get Employee with upcoming public holidays in next 7 days
+* URL: `/api/employees/upcoming-holidays`
+* Method: `GET`
+* Responses:
+    * `200 OK` on success
+ 
 ## Testing
 * To run the tests, use the following command:
 ```bash
@@ -110,8 +123,16 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 * Jest
 * Supertest
 * Moment.js (for timezone conversion)
+* Node-cron (for cron jobs)
 
-## Future Enhancements / Notes-
+##  Cron job to send mail for upcoming public holidays
+* Added a new Table to store Public Holidays per country per year.
+* To add a new public holiday for a country, we can update the `holidays.json` file and run the seed script to update the public holidays.
+* Public holidays can be fetch from any source and updated in the json file.
+* Added a cron job `scheduleJob.ts` to poll the API to get the employees with upcoming public holidays
+* If there are any employee, we can have a third party service we 
+
+## Future Enhancements
 * Added hooks in employee to change the timeZones into UTC before storing
 * We need middleware to convert the date-time fields from UTC to the user's local timezone when fetching data.
 * We can use third party services to get the timezone of requetse uedser basbed on IP* 
@@ -119,3 +140,4 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 * The error handling could have been better by adding a new Error classes.
 * Add documentation
 * Fix timezone issue with Holidays.
+* Addd database indexing and contraints.
