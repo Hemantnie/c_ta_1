@@ -141,3 +141,4 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 * Add documentation
 * Fix timezone issue with Holidays.
 * Addd database indexing and contraints.
+* Add decoarators for Services and get rid of routers module
