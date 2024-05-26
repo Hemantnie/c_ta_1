@@ -27,8 +27,17 @@ class EmployeeRepository {
         await transaction?.rollback();
         return 0;
       }
-      await Employee.update(data, { where: { employee_id: id }, transaction });
-      await Address.update(addressData, { where: { employee_id: id }, transaction });
+    // Update the employee and save
+    Object.assign(employee, data);
+    await employee.save({transaction});
+
+    if (addressData) {
+      const address = await Address.findOne({ where: { employee_id: id } , transaction});
+      if (address) {
+        Object.assign(address, addressData);
+        await address.save({transaction});
+      }
+    }
       transaction?.commit();
       return 1;
     }catch (error) {

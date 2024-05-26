@@ -73,6 +73,9 @@ class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> imp
             employee.modified_at = new Date(new Date().toUTCString());
           },
           beforeUpdate: (employee) => {
+            if(employee.changed('email')){
+              throw new Error('Email can not be modified');
+            }
             employee.modified_at = new Date(new Date().toUTCString());
           },
         },

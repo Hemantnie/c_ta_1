@@ -128,7 +128,7 @@ describe('Employee API', () => {
     const res = await request(app)
       .put(`/api/employees/${employeeId}`)
       .send({
-        email: 'Rama.Kumar@google.com',
+        name: 'Raaaa Ra',
         salary: 80000,
         address: {
           street: '456 Elm St',
@@ -139,7 +139,7 @@ describe('Employee API', () => {
         },
       });
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('email', 'Rama.Kumar@google.com');
+    expect(res.body).toHaveProperty('name', 'Raaaa Ra');
   });
 
   it('should fail to update an employee with invalid email', async () => {
