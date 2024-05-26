@@ -95,10 +95,12 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 
 
 ## Testing
-To run the tests, use the following command:
+* To run the tests, use the following command:
 ```bash
    npm test
 ```
+* Also a post man collection is attached to be imported under the postman package.
+
 
 ##  Technologies Used
 

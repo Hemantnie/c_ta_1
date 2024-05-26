@@ -4,6 +4,11 @@ import { EmployeeCreationAttributes } from '../models/employee';
 import { AddressCreationAttributes } from '../models/address';
 import { isError } from '../utils/utils';
 
+/**
+ * API to create a new Employee with Address
+ * @param req Contains object with properties EmployeeCreationAttributes and AddressCreationAttributes
+ * @param res returns newly  created Employees with Id
+ */
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const employeeData: EmployeeCreationAttributes = req.body;
@@ -20,7 +25,13 @@ export const createEmployee = async (req: Request, res: Response) => {
     }
   }
 };
-
+/**
+ * To get the dates in the given time zones we use the timezones mentioned in the Momentjs timezone
+ * https://momentjs.com/timezone/docs/
+ * @param req 
+ * @param res 
+ * @returns : List all all the employees
+ */
 export const getEmployees = async (req: Request, res: Response) => {
   try {
     const employees = await EmployeeService.getAllEmployees();
@@ -29,6 +40,13 @@ export const getEmployees = async (req: Request, res: Response) => {
     res.status(500).json({ error: isError(error) ? error.message : 'Unknown error' });
   }
 };
+
+/**
+ * Get the employee by Id also takes timeZones if passed
+ * @param req ID of the employee
+ * @param res 
+ * @returns : Single employee 
+ */
 
 export const getEmployeeById = async (req: Request, res: Response) => {
   try {

@@ -1,0 +1,165 @@
+{
+	"info": {
+		"_postman_id": "95be5ad8-e077-4cc1-8406-45f06f63d420",
+		"name": "Employee_Holidays",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Employees",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"position\": \"{{$randomJobTitle}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"salary\": 6000,\n    \"address\": {\n      \"street\": \"123 Main St\",\n      \"house_number\": \"{{$randomPhoneNumber}}\",\n      \"country\": \"\",\n      \"state\": \"CA\",\n      \"zipcode\": \"34343434\"\n    }\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/employees",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Employees",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/employees",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employee By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/employees/{{sample_employee_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"employees",
+						"{{sample_employee_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get employee holidays for a given year",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/employees/{{sample_employee_id}}/holidays/2024",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"employees",
+						"{{sample_employee_id}}",
+						"holidays",
+						"2024"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employess with Upcoming Holidays in 7 Days",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/employees/upcoming-holidays",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"employees",
+						"upcoming-holidays"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Employee",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"my_name@google.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/employees/{{sample_employee_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"employees",
+						"{{sample_employee_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "localhost:3000/api"
+		},
+		{
+			"key": "sample_employee_id",
+			"value": "a7de42f9-a12d-4d1d-9057-86b936abd7f6"
+		}
+	]
+}
