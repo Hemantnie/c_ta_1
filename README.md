@@ -25,9 +25,9 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
     ```bash
        npm install
     ```
-3. Initialize the SQLite database:
+3. Seed the database:
     ```bash
-        npx sequelize-cli db:migrate
+        npm run seed:all
     ```
 
 ## Usage
@@ -95,10 +95,12 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 
 
 ## Testing
-To run the tests, use the following command:
+* To run the tests, use the following command:
 ```bash
    npm test
 ```
+* Also a post man collection is attached to be imported under the postman package.
+
 
 ##  Technologies Used
 
@@ -118,3 +120,6 @@ To run the tests, use the following command:
 * User transaction and locks to update the data
 * The error handling could have been better by adding a new Error classes.
 * Create a  utils methods for timezone and validations
+* Fix skipped test
+* Fix timezone issue with Holiday.
+* Add documentation

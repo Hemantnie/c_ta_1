@@ -1,0 +1,42 @@
+[
+    {
+      "name": "John Doe",
+      "position": "Developer",
+      "email": "john.doe@example.com",
+      "salary": 60000,
+      "address": {
+        "street": "123 Main St",
+        "house_number": "456",
+        "country": "US",
+        "state": "CA",
+        "zipcode": "12345"
+      }
+    },
+    {
+      "name": "Jane Smith",
+      "position": "Manager",
+      "email": "jane.smith@example.com",
+      "salary": 80000,
+      "address": {
+        "street": "789 Elm St",
+        "house_number": "789",
+        "country": "US",
+        "state": "NY",
+        "zipcode": "67890"
+      }
+    },
+    {
+      "name": "Alice Johnson",
+      "position": "Designer",
+      "email": "alice.johnson@example.com",
+      "salary": 55000,
+      "address": {
+        "street": "456 Oak St",
+        "house_number": "101",
+        "country": "CA",
+        "state": "ON",
+        "zipcode": "54321"
+      }
+    }
+  ]
+  
