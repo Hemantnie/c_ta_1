@@ -117,7 +117,5 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 * We can use third party services to get the timezone of requetse uedser basbed on IP* 
 * User transaction and locks to update the data
 * The error handling could have been better by adding a new Error classes.
-* Create a  utils methods for timezone and validations
-* Fix skipped test
-* Fix timezone issue with Holiday.
 * Add documentation
+* Fix timezone issue with Holidays.
