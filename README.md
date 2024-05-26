@@ -97,7 +97,7 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 ```bash
    npm test
 ```
-* Also a Postman collection is attached to be imported under the postman package.
+* Also a Postman collection is attached to be imported under the postman folder.
 
 
 ##  Technologies Used
