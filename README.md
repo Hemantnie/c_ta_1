@@ -10,7 +10,6 @@ This is an Employee Management API built with Node.js, TypeScript, Sequelize, an
 - [Testing](#testing)
 - [Project Structure](#project-structure)
 - [Technologies Used](#technologies-used)
-- [License](#license)
 
 ## Installation
 
