@@ -42,50 +42,12 @@ class EmployeeService {
       throw new Error('Invalid email format');
     }
     const transaction = await sequelize.transaction();
-    try {
-      const employee = await Employee.findByPk(id, {
-        transaction,
-        lock: transaction.LOCK.UPDATE,
-      });
-
-      if (!employee) {
-        await transaction.rollback();
-        return 0;
-      }
-
-      await Employee.update(data, { where: { employee_id: id }, transaction });
-      await Address.update(addressData, { where: { employee_id: id }, transaction });
-
-      await transaction.commit();
-      return 1;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
-    }
+    return EmployeeRepository.update(id, data, addressData, transaction);
   }
 
   public async deleteEmployee(id: string): Promise<number> {
     const transaction = await sequelize.transaction();
-    try {
-      const employee = await Employee.findByPk(id, {
-        transaction,
-        lock: transaction.LOCK.UPDATE,
-      });
-
-      if (!employee) {
-        await transaction.rollback();
-        return 0;
-      }
-
-      await Address.destroy({ where: { employee_id: id }, transaction });
-      await Employee.destroy({ where: { employee_id: id }, transaction });
-
-      await transaction.commit();
-      return 1;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
-    }
+    return EmployeeRepository.delete(id, transaction);
   }
 
   public async getPublicHolidaysForEmployee(id: string, year: number): Promise<Holiday[]> {
@@ -100,6 +62,7 @@ class EmployeeService {
       return cachedHolidays;
     }
 
+    //TODO:Hemant Implement this method
     const holidays = await getPublicHolidays(country, year);
     const holidayEntries = holidays.map(holiday => ({
       holiday_id: uuidv4(),
@@ -110,7 +73,7 @@ class EmployeeService {
       name: holiday.name,
     }));
     await HolidayRepository.bulkCreate(holidayEntries);
-    return Holiday.findAll({ where: { country, year } });
+    return HolidayRepository.findByCountryAndYear(country, year);
   }
 
   public async getEmployeesWithUpcomingHolidays(): Promise<Employee[]> {
@@ -120,14 +83,7 @@ class EmployeeService {
       const nextWeek = new Date();
       nextWeek.setDate(today.getDate() + 7);
 
-      const holidays = await Holiday.findAll({
-        where: {
-          date: {
-            [Op.between]: [today, nextWeek],
-          },
-        },
-        transaction,
-      });
+      const holidays = await HolidayRepository.findHolidayInDaterange(today,nextWeek, transaction);
 
       if (!holidays.length) {
         await transaction.commit();
@@ -135,20 +91,7 @@ class EmployeeService {
       }
 
       const countryList = holidays.map(holiday => holiday.country);
-      const employees = await Employee.findAll({
-        include: [
-          {
-            model: Address,
-            as: 'address',
-            where: {
-              country: {
-                [Op.in]: countryList,
-              },
-            },
-          },
-        ],
-        transaction,
-      });
+      const employees = await EmployeeRepository.getEmployeesInCountries(countryList);
 
       await transaction.commit();
       return employees;

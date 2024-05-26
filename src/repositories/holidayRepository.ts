@@ -1,3 +1,4 @@
+import { Op, Transaction } from 'sequelize';
 import Holiday, { HolidayCreationAttributes } from '../models/holiday';
 
 class HolidayRepository {
@@ -11,6 +12,17 @@ class HolidayRepository {
 
   public async bulkCreate(data: HolidayCreationAttributes[]): Promise<Holiday[]> {
     return Holiday.bulkCreate(data);
+  }
+
+  public async findHolidayInDaterange(startDate: Date, endDate: Date, transaction?: Transaction){
+    return Holiday.findAll({
+      where: {
+        date: {
+          [Op.between]: [startDate, endDate],
+        },
+      },
+      transaction,
+    });
   }
 }
 
